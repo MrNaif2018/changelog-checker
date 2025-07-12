@@ -1,10 +1,13 @@
 *.pyc
 *.pyo
+.DS_Store
 .coverage
 .env
 .idea/
 .mypy_cache
+.prettiercache
 .pytest_cache/
+.venv
 .vscode/
 __pycache__/
 backup/
@@ -12,6 +15,3 @@ backups
 env/
 htmlcov/
 venv
-.venv
-.prettiercache
-.DS_Store

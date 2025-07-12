@@ -136,12 +136,12 @@ class TestUVParser:
 
     def test_parse_with_extra_whitespace(self):
         output = """
-        
-        - requests==2.28.0  
+
+        - requests==2.28.0
         + requests==2.29.0
-        
-        + new-package==1.0.0   
-        
+
+        + new-package==1.0.0
+
         """
         changes = self.parser.parse(output)
         assert len(changes) == 2

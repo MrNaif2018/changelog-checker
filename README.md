@@ -132,7 +132,7 @@ When you run changelog-checker, you'll see a beautifully formatted report like t
 │                                     Features                                                                                                                                              │
 │                                                                                                                                                                                                 │
 │  • Add callback for users to customize socket creation (#147,                                         │
-│ 8e1bc6a)                                   
+│ 8e1bc6a)
 ```
 
 ## Supported Package Managers
