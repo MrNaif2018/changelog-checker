@@ -19,6 +19,7 @@ jobs:
     env:
       OS: ${{ matrix.os }}
       PYTHON: ${{ matrix.python-version }}
+      TEST_ARGS: --cov-report=xml --junitxml=junit.xml -o junit_family=legacy
 
     steps:
       - name: Checkout code
@@ -38,7 +39,7 @@ jobs:
         run: uv run pre-commit run --all-files
 
       - name: Run checks
-        run: uv run task ci-cov
+        run: uv run task ci
 
       - name: Upload coverage
         uses: codecov/codecov-action@v5

@@ -54,7 +54,6 @@ lint_check = { cmd = "ruff format --check . && ruff check .", help = "run ruff l
 lint_types = { cmd = "mypy changelog_checker", help = "run mypy type verify" }
 test = { cmd = "pytest ${TEST_ARGS}", help = "run tests" }
 ci = { cmd = "task lint_check && task lint_types && task test", help = "run ci checks" }
-ci-cov = { cmd = "TEST_ARGS='--cov-report=xml --junitxml=junit.xml -o junit_family=legacy' task ci", help = "run ci checks with coverage" }
 
 [tool.hatch.version]
 path = "changelog_checker/version.py"
