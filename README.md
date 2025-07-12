@@ -6,6 +6,13 @@ A powerful tool for analyzing dependency updates and their changelogs. Automatic
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://img.shields.io/pypi/v/changelog-checker.svg?style=flat-square)](https://pypi.python.org/pypi/changelog-checker)
 
+## 🚀 Other Projects
+
+**Want to see more of my work?** Check out the **Bitcart** project - a comprehensive cryptocurrency payment processor:
+
+[![Bitcart Website](https://img.shields.io/badge/🌐_Website-bitcart.ai-blue?style=for-the-badge)](https://bitcart.ai)
+[![Bitcart GitHub](https://img.shields.io/badge/📦_GitHub-bitcart/bitcart-black?style=for-the-badge&logo=github)](https://github.com/bitcart/bitcart)
+
 ## Features
 
 - 🔍 **Automatic Changelog Detection**: Finds changelogs from GitHub releases, repository files, and PyPI

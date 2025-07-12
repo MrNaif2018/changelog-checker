@@ -1,3 +1,7 @@
+# 0.1.3
+
+Add support for Python 3.14
+
 # 0.1.2
 
 Configure proper CI deployment process
