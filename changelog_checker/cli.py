@@ -52,7 +52,7 @@ def main(input_file: TextIO | None, parser: str, log_level: str, verbose: bool, 
 
     Example usage:
 
-        uv sync -U | changelog-checker
+        uv sync -U 2>&1 | changelog-checker
 
         changelog-checker -f uv_output.txt
     """
@@ -67,7 +67,7 @@ def main(input_file: TextIO | None, parser: str, log_level: str, verbose: bool, 
         else:
             if sys.stdin.isatty():
                 click.echo("Error: No input provided. Use --input-file or pipe input to stdin.")
-                click.echo("Example: uv sync -U | changelog-checker")
+                click.echo("Example: uv sync -U 2>&1 | changelog-checker")
                 sys.exit(1)
             logger.debug("Reading input from stdin")
             input_text = sys.stdin.read()

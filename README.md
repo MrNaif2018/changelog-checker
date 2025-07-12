@@ -29,10 +29,10 @@ The most common usage is to pipe package manager output directly to changelog-ch
 
 ```bash
 # Update dependencies and check changelogs
-uv sync -U | changelog-checker
+uv sync -U 2>&1 | changelog-checker
 
 # Or save output to file first
-uv sync -U > updates.txt
+uv sync -U &> updates.txt
 changelog-checker -f updates.txt
 ```
 
@@ -42,7 +42,7 @@ changelog-checker -f updates.txt
 
 ```bash
 # Pipe uv output directly
-uv sync -U | changelog-checker
+uv sync -U 2>&1 | changelog-checker
 
 # Read from file
 changelog-checker --input-file updates.txt
@@ -52,7 +52,7 @@ changelog-checker -v --input-file updates.txt
 
 # Use GitHub token for higher rate limits
 export GITHUB_TOKEN=your_token_here
-uv sync -U | changelog-checker
+uv sync -U 2>&1 | changelog-checker
 ```
 
 ### Command Line Options
