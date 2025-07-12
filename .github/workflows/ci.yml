@@ -15,6 +15,10 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
+        os: ["ubuntu-latest", "macos-latest"]
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
 
     steps:
       - name: Checkout code
@@ -33,7 +37,18 @@ jobs:
         run: uv run pre-commit run --all-files
 
       - name: Run checks
-        run: uv run task ci
+        run: uv run task ci-cov
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          env_vars: OS,PYTHON
+          flags: unittests
+          name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
 
   build-and-publish:
     name: Build and publish to PyPI

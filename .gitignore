@@ -12,6 +12,8 @@
 __pycache__/
 backup/
 backups
+coverage.xml
 env/
 htmlcov/
+junit.xml
 venv
