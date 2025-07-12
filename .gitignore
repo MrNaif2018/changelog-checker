@@ -1,0 +1,17 @@
+*.pyc
+*.pyo
+.coverage
+.env
+.idea/
+.mypy_cache
+.pytest_cache/
+.vscode/
+__pycache__/
+backup/
+backups
+env/
+htmlcov/
+venv
+.venv
+.prettiercache
+.DS_Store
