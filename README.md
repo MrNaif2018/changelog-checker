@@ -1,6 +1,6 @@
 # Changelog Checker
 
-Test PR
+Test PR 2
 
 A powerful tool for analyzing dependency updates and their changelogs. Automatically fetches and displays changelog information for updated packages, helping you understand what changed in your dependencies.
 
