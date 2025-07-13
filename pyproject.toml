@@ -112,8 +112,14 @@ skip_cache_mtime_checks = true
 exclude = ["tests"]
 
 [tool.pytest.ini_options]
-addopts = ["--cov=changelog_checker", "--cov-report", "term-missing"]
+addopts = [
+    "--cov=changelog_checker",
+    "--cov-report",
+    "term-missing",
+    "--disable-network",
+]
 filterwarnings = [
     "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
 ]
+markers = ["live: mark tests as needing an internet connection to run."]
