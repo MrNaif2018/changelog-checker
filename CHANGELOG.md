@@ -1,3 +1,13 @@
+# 0.2.0
+
+Add support for HTML reports generation
+
+A new flag `-f` controls output format, current values: terminal, html
+
+A new flag `-o` controls output file path for HTML format
+
+The old `-f` flag for specifying input file was renamed to `-i`
+
 # 0.1.3
 
 Add support for Python 3.14
