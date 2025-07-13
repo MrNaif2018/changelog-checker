@@ -6,6 +6,9 @@ A powerful tool for analyzing dependency updates and their changelogs. Automatic
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://img.shields.io/pypi/v/changelog-checker.svg?style=flat-square)](https://pypi.python.org/pypi/changelog-checker)
 
+
+[![asciicast](https://asciinema.org/a/727585.svg)](https://asciinema.org/a/727585)
+
 ## 🚀 Other Projects
 
 **Want to see more of my work?** Check out the **Bitcart** project - a comprehensive cryptocurrency payment processor:
