@@ -6,7 +6,7 @@ A powerful tool for analyzing dependency updates and their changelogs. Automatic
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://img.shields.io/pypi/v/changelog-checker.svg?style=flat-square)](https://pypi.python.org/pypi/changelog-checker)
 
-[![gif](assets/demo.gif)](https://asciinema.org/a/727585)
+[![gif](/assets/demo.gif)](https://asciinema.org/a/727585)
 
 ## 🚀 Other Projects
 
@@ -160,9 +160,9 @@ You can also generate HTML reports for later viewing:
 changelog-checker -i updates.txt -f html -o report.html
 ```
 
-![HTML report](assets/1.png)
-![HTML report](assets/2.png)
-![HTML report](assets/3.png)
+![HTML report](/assets/1.png)
+![HTML report](/assets/2.png)
+![HTML report](/assets/3.png)
 
 ## Supported Package Managers
 

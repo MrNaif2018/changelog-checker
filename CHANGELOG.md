@@ -1,3 +1,7 @@
+# 0.2.1
+
+Fix PyPI readme rendering
+
 # 0.2.0
 
 Add support for HTML reports generation
