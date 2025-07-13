@@ -3,6 +3,7 @@ Utility functions and error handling for the changelog checker.
 """
 
 import logging
+import re
 import sys
 import time
 from collections.abc import Callable
@@ -10,6 +11,8 @@ from functools import wraps
 from typing import Any, TypeVar, cast
 
 import requests
+
+from changelog_checker.models import ChangeType, PackageReport
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -92,3 +95,51 @@ class NetworkError(ChangelogCheckerError):
 
 class ChangelogNotFoundError(ChangelogCheckerError):
     """Error when changelog cannot be found."""
+
+
+def detect_content_format(content: str) -> str:
+    """
+    Detect if content is markdown, RST, or plain text.
+
+    Args:
+        content: The content to analyze
+
+    Returns:
+        One of: "markdown", "rst", "plain"
+    """
+    lines = content.split("\n")
+    markdown_indicators = 0
+    rst_indicators = 0
+    for line in lines:
+        stripped = line.strip()
+        if re.match(r"^#+\s", stripped):  # Headers: # ## ###
+            markdown_indicators += 2
+        elif re.match(r"^\*\*.*\*\*", stripped) or re.match(r"^[-*+]\s", stripped):  # Bold: **text**
+            markdown_indicators += 1
+        elif re.match(r"^```", stripped) or re.match(r"^\[.*\]\(.*\)", stripped):  # Code blocks: ```
+            markdown_indicators += 2
+        elif re.match(r"^[=\-~`#^\"']{3,}$", stripped) or re.match(r"^\.\. ", stripped):  # RST underlines
+            rst_indicators += 2
+        elif "~~~~" in stripped or "^^^^" in stripped:  # RST section markers
+            rst_indicators += 1
+        elif re.match(r"^[\w\-_]+\s+v\d+\.\d+\.\d+.*\([^)]+\)$", stripped):  # RST-style version headers
+            rst_indicators += 2
+    if rst_indicators > markdown_indicators and rst_indicators > 0:
+        return "rst"
+    if markdown_indicators > 0:
+        return "markdown"
+    return "plain"
+
+
+def get_packages_with_missing_changelogs(reports: list[PackageReport]) -> list[PackageReport]:
+    """Get packages that have missing changelogs."""
+    missing_changelogs = []
+    for report in reports:
+        if (
+            report.dependency_change.change_type == ChangeType.UPDATED
+            and report.package_info
+            and not report.changelog_entries
+            and not report.error_message
+        ):
+            missing_changelogs.append(report)
+    return missing_changelogs

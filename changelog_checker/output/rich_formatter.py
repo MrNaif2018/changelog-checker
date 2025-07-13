@@ -2,8 +2,6 @@
 Rich formatter for displaying changelog checker results.
 """
 
-import re
-
 from rich import box
 from rich.console import Console
 from rich.markdown import Markdown
@@ -11,6 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from changelog_checker.models import ChangeType, PackageReport
+from changelog_checker.utils import detect_content_format, get_packages_with_missing_changelogs
 
 try:
     from rich_rst import RestructuredText
@@ -37,7 +36,7 @@ class RichFormatter:
         updated = [r for r in reports if r.dependency_change.change_type == ChangeType.UPDATED]
         added = [r for r in reports if r.dependency_change.change_type == ChangeType.ADDED]
         removed = [r for r in reports if r.dependency_change.change_type == ChangeType.REMOVED]
-        missing_changelogs = self._get_packages_with_missing_changelogs(reports)
+        missing_changelogs = get_packages_with_missing_changelogs(reports)
         self._display_summary(len(updated), len(added), len(removed), len(missing_changelogs))
         if updated:
             self._display_updated_packages(updated)
@@ -81,19 +80,6 @@ class RichFormatter:
         self.console.print(Panel.fit("[bold red]➖ Removed Packages[/bold red]", border_style="red"))
         for report in reports:
             self._display_package_report(report)
-
-    def _get_packages_with_missing_changelogs(self, reports: list[PackageReport]) -> list[PackageReport]:
-        """Get packages that have missing changelogs."""
-        missing_changelogs = []
-        for report in reports:
-            if (
-                report.dependency_change.change_type == ChangeType.UPDATED
-                and report.package_info
-                and not report.changelog_entries
-                and not report.error_message
-            ):
-                missing_changelogs.append(report)
-        return missing_changelogs
 
     def _display_missing_changelogs(self, reports: list[PackageReport]) -> None:
         """Display packages with missing changelogs."""
@@ -155,37 +141,12 @@ class RichFormatter:
         """Format changelog content for display with proper markdown/RST rendering."""
         if not content.strip():
             return "[dim]No changelog content found[/dim]"
-        content_format = self._detect_content_format(content)
+        content_format = detect_content_format(content)
         if content_format == "markdown":
             return self._format_as_markdown(content)
         if content_format == "rst" and HAS_RST_SUPPORT:
             return self._format_as_rst(content)
         return self._format_as_plain_text(content)
-
-    def _detect_content_format(self, content: str) -> str:
-        """Detect if content is markdown, RST, or plain text."""
-        lines = content.split("\n")
-        markdown_indicators = 0
-        rst_indicators = 0
-        for line in lines:
-            stripped = line.strip()
-            if re.match(r"^#+\s", stripped):  # Headers: # ## ###
-                markdown_indicators += 2
-            elif re.match(r"^\*\*.*\*\*", stripped) or re.match(r"^[-*+]\s", stripped):  # Bold: **text**
-                markdown_indicators += 1
-            elif re.match(r"^```", stripped) or re.match(r"^\[.*\]\(.*\)", stripped):  # Code blocks: ```
-                markdown_indicators += 2
-            elif re.match(r"^[=\-~`#^\"']{3,}$", stripped) or re.match(r"^\.\. ", stripped):  # RST underlines
-                rst_indicators += 2
-            elif "~~~~" in stripped or "^^^^" in stripped:  # RST section markers
-                rst_indicators += 1
-            elif re.match(r"^[\w\-_]+\s+v\d+\.\d+\.\d+.*\([^)]+\)$", stripped):  # RST-style version headers
-                rst_indicators += 2
-        if rst_indicators > markdown_indicators and rst_indicators > 0:
-            return "rst"
-        if markdown_indicators > 0:
-            return "markdown"
-        return "plain"
 
     def _format_as_markdown(self, content: str) -> str:
         """Format content as markdown using Rich's Markdown renderer."""

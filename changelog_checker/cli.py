@@ -8,13 +8,14 @@ from typing import TextIO
 import click
 
 from .core import ChangelogChecker
+from .output import HTMLFormatter, RichFormatter
 from .utils import ChangelogCheckerError, NetworkError, ParserError, setup_logging
 
 
-@click.command()
+@click.command(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option(
     "--input-file",
-    "-f",
+    "-i",
     type=click.File("r"),
     help="Read input from file instead of stdin",
 )
@@ -43,7 +44,28 @@ from .utils import ChangelogCheckerError, NetworkError, ParserError, setup_loggi
     envvar="GITHUB_TOKEN",
     help="GitHub API token for authentication (can also use GITHUB_TOKEN env var)",
 )
-def main(input_file: TextIO | None, parser: str, log_level: str, verbose: bool, github_token: str | None) -> None:
+@click.option(
+    "--output-format",
+    "-f",
+    default="terminal",
+    type=click.Choice(["terminal", "html"]),
+    help="Output format: terminal (rich console) or html (HTML file) (default: terminal)",
+)
+@click.option(
+    "--output-file",
+    "-o",
+    default="changelog_report.html",
+    help="Output file path for HTML format (default: changelog_report.html)",
+)
+def main(
+    input_file: TextIO | None,
+    parser: str,
+    log_level: str,
+    verbose: bool,
+    github_token: str | None,
+    output_format: str,
+    output_file: str,
+) -> None:
     """
     Changelog Checker - Analyze dependency updates and their changelogs.
 
@@ -54,7 +76,9 @@ def main(input_file: TextIO | None, parser: str, log_level: str, verbose: bool, 
 
         uv sync -U 2>&1 | changelog-checker
 
-        changelog-checker -f uv_output.txt
+        changelog-checker -i uv_output.txt
+
+        changelog-checker -f html -o report.html -i uv_output.txt
     """
     if verbose:
         log_level = "DEBUG"
@@ -76,7 +100,10 @@ def main(input_file: TextIO | None, parser: str, log_level: str, verbose: bool, 
             click.echo("Error: Empty input provided.")
             sys.exit(1)
         logger.debug(f"Input length: {len(input_text)} characters")
-        checker = ChangelogChecker(github_token=github_token)
+        formatter: HTMLFormatter | RichFormatter = (
+            HTMLFormatter(output_file=output_file) if output_format == "html" else RichFormatter()
+        )
+        checker = ChangelogChecker(github_token=github_token, formatter=formatter)
         reports = checker.check_dependencies(input_text, parser)
         logger.info(f"Generated {len(reports)} package reports")
         checker.formatter.display_results(reports)

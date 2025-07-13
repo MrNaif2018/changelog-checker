@@ -8,6 +8,7 @@ from changelog_checker.models import (
     PackageReport,
 )
 from changelog_checker.output.rich_formatter import RichFormatter
+from changelog_checker.utils import detect_content_format
 
 
 class TestRichFormatter:
@@ -30,7 +31,7 @@ def example():
     pass
 ```
 """
-        format_type = self.formatter._detect_content_format(markdown_content)
+        format_type = detect_content_format(markdown_content)
         assert format_type == "markdown"
 
     def test_detect_content_format_rst(self):
@@ -52,7 +53,7 @@ Bug Fixes
 
 - Fixed issue
 """
-        format_type = self.formatter._detect_content_format(rst_content)
+        format_type = detect_content_format(rst_content)
         assert format_type == "rst"
 
     def test_detect_content_format_plain(self):
@@ -62,7 +63,7 @@ Added new feature
 Fixed bug
 Updated documentation
 """
-        format_type = self.formatter._detect_content_format(plain_content)
+        format_type = detect_content_format(plain_content)
         assert format_type == "plain"
 
     def test_format_as_plain_text(self):

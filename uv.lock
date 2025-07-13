@@ -45,6 +45,10 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+beautiful-html = [
+    { name = "docutils" },
+    { name = "markdown" },
+]
 rst = [
     { name = "rich-rst" },
 ]
@@ -58,6 +62,8 @@ dev = [
     { name = "pytest-mock" },
     { name = "ruff" },
     { name = "taskipy" },
+    { name = "types-docutils" },
+    { name = "types-markdown" },
     { name = "types-requests" },
 ]
 
@@ -65,12 +71,14 @@ dev = [
 requires-dist = [
     { name = "click", specifier = ">=8.2.1" },
     { name = "distlib", specifier = ">=0.3.9" },
+    { name = "docutils", marker = "extra == 'beautiful-html'", specifier = ">=0.21.2" },
     { name = "googlesearch-python", specifier = ">=1.3.0" },
+    { name = "markdown", marker = "extra == 'beautiful-html'", specifier = ">=3.8.2" },
     { name = "requests", specifier = ">=2.32.4" },
     { name = "rich", specifier = ">=14.0.0" },
     { name = "rich-rst", marker = "extra == 'rst'", specifier = ">=1.3.1" },
 ]
-provides-extras = ["rst"]
+provides-extras = ["beautiful-html", "rst"]
 
 [package.metadata.requires-dev]
 dev = [
@@ -81,6 +89,8 @@ dev = [
     { name = "pytest-mock", specifier = ">=3.10.0" },
     { name = "ruff", specifier = ">=0.12.3" },
     { name = "taskipy", specifier = ">=1.14.1" },
+    { name = "types-docutils", specifier = ">=0.21.0.20250710" },
+    { name = "types-markdown", specifier = ">=3.8.0.20250708" },
     { name = "types-requests", specifier = ">=2.32.4.20250611" },
 ]
 
@@ -277,6 +287,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f2/97/ebf4da567aa6827c909642694d71c9fcf53e5b504f2d96afea02718862f3/iniconfig-2.1.0.tar.gz", hash = "sha256:3abbd2e30b36733fee78f9c7f7308f2d0050e88f0087fd25c2645f63c773e1c7", size = 4793, upload-time = "2025-03-19T20:09:59.721Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2c/e1/e6716421ea10d38022b952c159d5161ca1193197fb744506875fbb87ea7b/iniconfig-2.1.0-py3-none-any.whl", hash = "sha256:9deba5723312380e77435581c6bf4935c94cbfab9b1ed33ef8d238ea168eb760", size = 6050, upload-time = "2025-03-19T20:10:01.071Z" },
+]
+
+[[package]]
+name = "markdown"
+version = "3.8.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/c2/4ab49206c17f75cb08d6311171f2d65798988db4360c4d1485bd0eedd67c/markdown-3.8.2.tar.gz", hash = "sha256:247b9a70dd12e27f67431ce62523e675b866d254f900c4fe75ce3dda62237c45", size = 362071, upload-time = "2025-06-19T17:12:44.483Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/96/2b/34cc11786bc00d0f04d0f5fdc3a2b1ae0b6239eef72d3d345805f9ad92a1/markdown-3.8.2-py3-none-any.whl", hash = "sha256:5c83764dbd4e00bdd94d85a19b8d55ccca20fe35b2e678a1422b380324dd5f24", size = 106827, upload-time = "2025-06-19T17:12:42.994Z" },
 ]
 
 [[package]]
@@ -639,6 +658,24 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5b/b9/1ed31d167be802da0fc95020d04cd27b7d7065cc6fbefdd2f9186f60d7bd/tomli-2.2.1-cp313-cp313-win32.whl", hash = "sha256:d3f5614314d758649ab2ab3a62d4f2004c825922f9e370b29416484086b264ec", size = 98724, upload-time = "2024-11-27T22:38:32.837Z" },
     { url = "https://files.pythonhosted.org/packages/c7/32/b0963458706accd9afcfeb867c0f9175a741bf7b19cd424230714d722198/tomli-2.2.1-cp313-cp313-win_amd64.whl", hash = "sha256:a38aa0308e754b0e3c67e344754dff64999ff9b513e691d0e786265c93583c69", size = 109383, upload-time = "2024-11-27T22:38:34.455Z" },
     { url = "https://files.pythonhosted.org/packages/6e/c2/61d3e0f47e2b74ef40a68b9e6ad5984f6241a942f7cd3bbfbdbd03861ea9/tomli-2.2.1-py3-none-any.whl", hash = "sha256:cb55c73c5f4408779d0cf3eef9f762b9c9f147a77de7b258bef0a5628adc85cc", size = 14257, upload-time = "2024-11-27T22:38:35.385Z" },
+]
+
+[[package]]
+name = "types-docutils"
+version = "0.21.0.20250710"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/fa/809a9001b6c83e10d76dffffca919ea36c876845c10c9c6dc3280c6fff13/types_docutils-0.21.0.20250710.tar.gz", hash = "sha256:9561d834b3a6b0c99ebd62f956eb5a2ea7d9b7401ba0d97df3194865126431c4", size = 42077, upload-time = "2025-07-10T03:15:47.225Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/54/f2/e4cb4b2e197eeebcc4eb440801c7d3504ed1c672e58a8ad425bb28440af9/types_docutils-0.21.0.20250710-py3-none-any.whl", hash = "sha256:922d96912c1ca51285e294ce77a2f03db48405c9fcc92d594c5746268905d84a", size = 67949, upload-time = "2025-07-10T03:15:46.071Z" },
+]
+
+[[package]]
+name = "types-markdown"
+version = "3.8.0.20250708"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/95/01/0bab46f013e8ff6f2c54f9cb35252e4f6ccf1b7b863ba53f56e5e1ae1429/types_markdown-3.8.0.20250708.tar.gz", hash = "sha256:28690251fe90757f5a99cd671c79502bc2de07aef2d35fe54117c3b1c799804a", size = 19337, upload-time = "2025-07-08T03:14:09.898Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/08/3e160e70de991f234ea8bcfe135a61779761ffc76c13164b97c068989ffc/types_markdown-3.8.0.20250708-py3-none-any.whl", hash = "sha256:d1f634931b463adf7603c012724b7e9e5eff976eb517dc700ebece2d6189b1ce", size = 25785, upload-time = "2025-07-08T03:14:08.846Z" },
 ]
 
 [[package]]

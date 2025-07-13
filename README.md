@@ -6,7 +6,7 @@ A powerful tool for analyzing dependency updates and their changelogs. Automatic
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PyPI version](https://img.shields.io/pypi/v/changelog-checker.svg?style=flat-square)](https://pypi.python.org/pypi/changelog-checker)
 
-[![gif](demo.gif)](https://asciinema.org/a/727585)
+[![gif](assets/demo.gif)](https://asciinema.org/a/727585)
 
 ## 🚀 Other Projects
 
@@ -42,7 +42,10 @@ uv sync -U 2>&1 | changelog-checker
 
 # Or save output to file first
 uv sync -U &> updates.txt
-changelog-checker -f updates.txt
+changelog-checker -i updates.txt
+
+# or get html report
+changelog-checker -i updates.txt -f html -o report.html
 ```
 
 ## Usage
@@ -68,7 +71,7 @@ uv sync -U 2>&1 | changelog-checker
 
 ```bash
 Options:
-  -f, --input-file FILENAME       Read input from file instead of stdin
+  -i, --input-file FILENAME       Read input from file instead of stdin
   -p, --parser [uv]               Parser type to use (default: uv)
   --log-level [DEBUG|INFO|WARNING|ERROR]
                                   Logging level (default: INFO)
@@ -76,7 +79,12 @@ Options:
                                   level DEBUG)
   -t, --github-token TEXT         GitHub API token for authentication (can
                                   also use GITHUB_TOKEN env var)
-  --help                          Show this message and exit.               Show this message and exit
+  -f, --output-format [terminal|html]
+                                  Output format: terminal (rich console) or
+                                  html (HTML file) (default: terminal)
+  -o, --output-file TEXT          Output file path for HTML format (default:
+                                  changelog_report.html)
+  -h, --help                      Show this message and exit.
 ```
 
 ### Environment Variables
@@ -143,6 +151,18 @@ When you run changelog-checker, you'll see a beautifully formatted report like t
 │  • Add callback for users to customize socket creation (#147,                                         │
 │ 8e1bc6a)
 ```
+
+## HTML reports
+
+You can also generate HTML reports for later viewing:
+
+```bash
+changelog-checker -i updates.txt -f html -o report.html
+```
+
+![HTML report](assets/1.png)
+![HTML report](assets/2.png)
+![HTML report](assets/3.png)
 
 ## Supported Package Managers
 

@@ -5,7 +5,7 @@ Core application logic for the changelog checker.
 import logging
 
 from .models import ChangeType, DependencyChange, PackageReport
-from .output import RichFormatter
+from .output import HTMLFormatter, RichFormatter
 from .parsers import UVParser
 from .research import ChangelogFinder, PackageFinder
 from .utils import ChangelogCheckerError, NetworkError, ParserError
@@ -14,15 +14,16 @@ from .utils import ChangelogCheckerError, NetworkError, ParserError
 class ChangelogChecker:
     """Main application class that orchestrates all components."""
 
-    def __init__(self, github_token: str | None = None):
+    def __init__(self, github_token: str | None = None, formatter: RichFormatter | HTMLFormatter | None = None):
         """
         Initialize the changelog checker.
 
         Args:
             github_token: Optional GitHub API token.
+            formatter: Optional formatter instance. Defaults to RichFormatter.
         """
         self.logger = logging.getLogger("changelog_checker")
-        self.formatter = RichFormatter()
+        self.formatter = formatter or RichFormatter()
         self.package_finder = PackageFinder()
         if github_token:
             self.logger.debug("Using GitHub API token for authentication")
