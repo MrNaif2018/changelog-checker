@@ -1,3 +1,7 @@
+# 0.2.2
+
+Fix PyPI rendering again
+
 # 0.2.1
 
 Fix PyPI readme rendering

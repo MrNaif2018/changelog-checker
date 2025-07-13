@@ -58,7 +58,7 @@ content-type = "text/markdown"
 fragments = [{ path = "README.md" }]
 # relative links to absolute
 substitutions = [
-    { pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)', replacement = '[\1](https://github.com/MrNaif2018/changelog-checker/tree/master\g<2>)' },
+    { pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)', replacement = '[\1](https://raw.githubusercontent.com/MrNaif2018/changelog-checker/master\g<2>)' },
 ]
 
 
