@@ -65,9 +65,11 @@ class ChangelogFinder:
             Tuple of (changelog_url, changelog_content) or (None, None) if not found
         """
         self.logger.debug(f"Trying repository archive download for {owner}/{repo}")
-        changelog_url, content = self._fetch_from_repository_archive(owner, repo)
-        if content:
-            return changelog_url, content
+        archive_result = self._fetch_from_repository_archive(owner, repo)
+        if archive_result is not None:
+            changelog_url, content = archive_result
+            if content:
+                return changelog_url, content
         return None, None
 
     def find_changelog_entries(
@@ -94,16 +96,20 @@ class ChangelogFinder:
         owner, repo = parts[-2], parts[-1]
         self.logger.debug(f"Looking for changelog entries in {owner}/{repo} for versions {old_version} to {new_version}")
         self.logger.debug(f"Trying GitHub releases API for {owner}/{repo}")
-        entries, releases_url = self._fetch_from_github_releases(owner, repo, old_version, new_version)
-        if entries:
-            self.logger.debug(f"Found {len(entries)} entries from GitHub releases")
-            return entries, releases_url
+        releases_result = self._fetch_from_github_releases(owner, repo, old_version, new_version)
+        if releases_result is not None:
+            entries, releases_url = releases_result
+            if entries:
+                self.logger.debug(f"Found {len(entries)} entries from GitHub releases")
+                return entries, releases_url
         self.logger.debug(f"Falling back to changelog file parsing for {owner}/{repo}")
-        changelog_url, content = self.find_changelog(owner, repo)
-        if content:
-            entries = self.parse_changelog(content, old_version, new_version)
-            self.logger.debug(f"Found {len(entries)} entries from changelog file")
-            return entries, changelog_url
+        changelog_result = self.find_changelog(owner, repo)
+        if changelog_result is not None:
+            changelog_url, content = changelog_result
+            if content:
+                entries = self.parse_changelog(content, old_version, new_version)
+                self.logger.debug(f"Found {len(entries)} entries from changelog file")
+                return entries, changelog_url
         return [], None
 
     def _normalize_tag_to_version(self, tag_name: str) -> str:

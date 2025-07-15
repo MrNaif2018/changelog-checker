@@ -8,13 +8,14 @@ import sys
 import time
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, TypeVar, cast
+from typing import ParamSpec, TypeVar
 
 import requests
 
 from changelog_checker.models import ChangeType, PackageReport
 
-F = TypeVar("F", bound=Callable[..., Any])
+P = ParamSpec("P")
+T = TypeVar("T")
 
 
 def setup_logging(level: str = "INFO") -> logging.Logger:
@@ -38,11 +39,11 @@ def setup_logging(level: str = "INFO") -> logging.Logger:
     return logger
 
 
-def handle_network_errors(func: F) -> F:
+def handle_network_errors(func: Callable[P, T]) -> Callable[P, T | None]:
     """Decorator to handle common network errors gracefully."""
 
     @wraps(func)
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> T | None:
         try:
             return func(*args, **kwargs)
         except Exception as e:
@@ -50,14 +51,14 @@ def handle_network_errors(func: F) -> F:
             logger.warning(f"Network error in {func.__name__}: {e}")
             return None
 
-    return cast(F, wrapper)
+    return wrapper
 
 
-def safe_request(func: F) -> F:
+def safe_request(func: Callable[P, T]) -> Callable[P, T | None]:
     """Decorator to make HTTP requests safer with retries and timeouts."""
 
     @wraps(func)
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> T | None:
         max_retries = 3
         base_delay = 1.0
         for attempt in range(max_retries):
@@ -78,7 +79,7 @@ def safe_request(func: F) -> F:
                 raise
         return None
 
-    return cast(F, wrapper)
+    return wrapper
 
 
 class ChangelogCheckerError(Exception):
