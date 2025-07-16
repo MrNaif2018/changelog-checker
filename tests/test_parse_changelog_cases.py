@@ -233,6 +233,31 @@ Bug fixes:
         assert "Dropped official support for Python 3.5" in entries[0].content
         assert "Some new features for 0.19.0" in entries[1].content
 
+    def test_parse_package_name_with_dots(self):
+        content = """
+web3.py v7.12.1 (2025-07-14)
+----------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fix ``AutoProvider`` batching setup by adding a proxy batch request.
+
+web3.py v7.12.0 (2025-05-22)
+----------------------------
+
+Features
+~~~~~~~~
+
+- Introduce ``ens.utils.dns_encode_name`` as a rename of the current ``ens_encode_name``.
+"""
+        entries = self.finder.parse_changelog(content, "7.11.0", "7.12.1")
+        assert len(entries) == 2
+        assert entries[0].version == "7.12.1"
+        assert entries[1].version == "7.12.0"
+        assert "AutoProvider" in entries[0].content
+        assert "dns_encode_name" in entries[1].content
+
     def test_parse_package_version_rst_format(self):
         content = """
 Release Notes

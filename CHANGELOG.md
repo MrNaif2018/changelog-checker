@@ -1,3 +1,9 @@
+# 0.2.3
+
+Fix parsing of changelogs where package name contains a dot
+
+Add py.typed marker
+
 # 0.2.2
 
 Fix PyPI rendering again

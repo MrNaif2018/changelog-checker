@@ -377,7 +377,8 @@ class ChangelogFinder:
             # Bracketed versions: [1.2.3] or [v1.2.3]
             r"^\[v?(\d+\.\d+(?:\.\d+)?(?:\.\d+)?)\]",
             # Package name with version and optional date: "ecdsa 0.19.1", "ecdsa v0.19.1", "H11 0.16.0 (2025-04-23)"
-            r"^[\w\-_]+\s+v?(\d+\.\d+(?:\.\d+)?(?:\.\d+)?)(?:\s*\([^)]+\))?",
+            # "web3.py v7.12.1 (2025-07-14)"
+            r"^[\w\-_.]+\s+v?(\d+\.\d+(?:\.\d+)?(?:\.\d+)?)(?:\s*\([^)]+\))?",
             # Simple version with optional date: "v1.2.3 (2025-04-14)"
             # or "1.2.3 (2025-04-14)" or "1.2.3" or "8.2 (01 May 2025)"
             r"^v?(\d+\.\d+(?:\.\d+)?(?:\.\d+)?)(?:\s*\([^)]+\)|\s*[-:]|$)",
