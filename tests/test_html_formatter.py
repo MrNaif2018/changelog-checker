@@ -103,7 +103,7 @@ class TestHTMLFormatter:
     @patch("changelog_checker.output.html_formatter.HAS_MARKDOWN_SUPPORT", True)
     def test_format_changelog_content_html_markdown(self):
         markdown_content = "# Header\n- List item"
-        with patch("changelog_checker.output.html_formatter.markdown") as mock_md:
+        with patch("changelog_checker.output.html_formatter.markdown", create=True) as mock_md:
             mock_md.markdown.return_value = "<h1>Header</h1><ul><li>List item</li></ul>"
             result = self.formatter._format_changelog_content_html(markdown_content)
             assert result == "<h1>Header</h1><ul><li>List item</li></ul>"
@@ -116,7 +116,11 @@ Header
 
 - List item
 """
-        with patch("changelog_checker.output.html_formatter.publish_parts") as mock_publish:
+        with (
+            patch("changelog_checker.output.html_formatter.docutils", create=True) as mock_doc,
+            patch("changelog_checker.output.html_formatter.publish_parts", create=True) as mock_publish,
+        ):
+            mock_doc.utils.Reporter.SEVERE_LEVEL = 4
             mock_publish.return_value = {"body": "<h1>Header</h1><ul><li>List item</li></ul>"}
             result = self.formatter._format_changelog_content_html(rst_content)
             assert result == "<h1>Header</h1><ul><li>List item</li></ul>"
@@ -125,7 +129,7 @@ Header
         markdown_content = "# Header\n- List item"
         with (
             patch("changelog_checker.output.html_formatter.HAS_MARKDOWN_SUPPORT", True),
-            patch("changelog_checker.output.html_formatter.markdown") as mock_md,
+            patch("changelog_checker.output.html_formatter.markdown", create=True) as mock_md,
         ):
             mock_md.markdown.side_effect = Exception("Rendering error")
             result = self.formatter._format_changelog_content_html(markdown_content)
@@ -193,7 +197,7 @@ Header
     def test_markdown_links_get_target_blank(self):
         """Test that markdown links get target='_blank' added."""
         markdown_content = "# Header\nCheck out [this link](https://example.com) for more info."
-        with patch("changelog_checker.output.html_formatter.markdown") as mock_md:
+        with patch("changelog_checker.output.html_formatter.markdown", create=True) as mock_md:
             mock_md.markdown.return_value = (
                 '<h1>Header</h1><p>Check out <a href="https://example.com">this link</a> for more info.</p>'
             )
@@ -209,7 +213,11 @@ Header
 
 Check out `this link <https://example.com>`__ for more info.
 """
-        with patch("changelog_checker.output.html_formatter.publish_parts") as mock_publish:
+        with (
+            patch("changelog_checker.output.html_formatter.docutils", create=True) as mock_doc,
+            patch("changelog_checker.output.html_formatter.publish_parts", create=True) as mock_publish,
+        ):
+            mock_doc.utils.Reporter.SEVERE_LEVEL = 4
             mock_publish.return_value = {
                 "body": (
                     '<p>Check out <a class="reference external" href="https://example.com">this link</a> for more info.</p>'
