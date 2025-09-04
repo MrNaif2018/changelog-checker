@@ -1,3 +1,7 @@
+# 0.3.0
+
+Add pip parser (`pip list --outdated`)
+
 # 0.2.3
 
 Fix parsing of changelogs where package name contains a dot
