@@ -15,7 +15,7 @@ class PipParser(BaseParser):
 
     def validate_output(self, output: str) -> bool:
         """Check if output looks like pip list --outdated output."""
-        if output == "": # empty output indicates no updates found
+        if output == "":  # empty output indicates no updates found
             return True
         pip_header = ["Package", "Version", "Latest", "Type"]
         lines = output.split("\n")
