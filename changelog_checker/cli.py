@@ -23,7 +23,7 @@ from .utils import ChangelogCheckerError, NetworkError, ParserError, setup_loggi
     "--parser",
     "-p",
     default="uv",
-    type=click.Choice(["uv"]),
+    type=click.Choice(["uv", "pip"]),
     help="Parser type to use (default: uv)",
 )
 @click.option(

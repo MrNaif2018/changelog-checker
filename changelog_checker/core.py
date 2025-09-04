@@ -6,7 +6,7 @@ import logging
 
 from .models import ChangeType, DependencyChange, PackageReport
 from .output import HTMLFormatter, RichFormatter
-from .parsers import UVParser
+from .parsers import BaseParser, PipParser, UVParser
 from .research import ChangelogFinder, PackageFinder
 from .utils import ChangelogCheckerError, NetworkError, ParserError
 
@@ -43,8 +43,11 @@ class ChangelogChecker:
             List of PackageReport objects
         """
         try:
+            parser: BaseParser
             if parser_type == "uv":
                 parser = UVParser()
+            elif parser_type == "pip":
+                parser = PipParser()
             else:
                 raise ParserError(f"Unsupported parser type: {parser_type}")
             if not parser.validate_output(input_text):

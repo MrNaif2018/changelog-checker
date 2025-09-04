@@ -46,6 +46,9 @@ changelog-checker -i updates.txt
 
 # or get html report
 changelog-checker -i updates.txt -f html -o report.html
+
+# or use with (uv) pip to check changelogs of pinned dependencies
+uv pip list --outdated | changelog-checker -p pip
 ```
 
 ## Usage
@@ -72,7 +75,7 @@ uv sync -U 2>&1 | changelog-checker
 ```bash
 Options:
   -i, --input-file FILENAME       Read input from file instead of stdin
-  -p, --parser [uv]               Parser type to use (default: uv)
+  -p, --parser [uv|pip]           Parser type to use (default: uv)
   --log-level [DEBUG|INFO|WARNING|ERROR]
                                   Logging level (default: INFO)
   -v, --verbose                   Enable verbose output (equivalent to --log-
@@ -169,6 +172,7 @@ changelog-checker -i updates.txt -f html -o report.html
 Currently supported:
 
 - **uv**: Python package manager
+- **pip**: Pip (only "list --outdated")
 
 ## How It Works
 
