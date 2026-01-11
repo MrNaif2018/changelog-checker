@@ -8,12 +8,12 @@ dynamic = ["version", "readme"]
 requires-python = ">=3.11"
 description = "A tool for analyzing dependency updates and their changelogs."
 license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "MrNaif2018", email = "chuff184@gmail.com" }]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Quality Assurance",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -60,7 +60,6 @@ fragments = [{ path = "README.md" }]
 substitutions = [
     { pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)', replacement = '[\1](https://raw.githubusercontent.com/MrNaif2018/changelog-checker/master\g<2>)' },
 ]
-
 
 [tool.taskipy.tasks]
 lint = { cmd = "ruff format . && ruff check --fix .", help = "run linters with autofix" }
