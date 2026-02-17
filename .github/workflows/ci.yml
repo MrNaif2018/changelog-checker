@@ -67,7 +67,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: Tests - Python ${{ env.PYTHON }} on ${{ matrix.os }}
           flags: tests
-          env_vars: PYTHON, OS
+          env_vars: PYTHON,OS
           upload_coverage: ${{ job.status == 'success' }}
 
       - name: Upload test results
@@ -77,7 +77,12 @@ jobs:
           suffix: py${{ env.PYTHON }}-${{ matrix.os }}
 
   combine-coverage:
-    name: combine-coverage
+    name: combine-coverage-${{ matrix.os }}
     uses: bitcart/bitcart-actions/.github/workflows/combine-coverage.yml@master
     needs: test
     if: ${{ !cancelled() }}
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest"]
+    with:
+      os: ${{ matrix.os }}
