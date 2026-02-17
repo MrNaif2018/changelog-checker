@@ -392,7 +392,7 @@ class ChangelogFinder:
             for match in matches:
                 try:
                     NormalizedVersion(match)
-                    return match
+                    return str(match)
                 except Exception:
                     self.logger.debug(f"Trying version pattern {pattern} on line {line}, but failed to parse version {match}")
                     continue
@@ -404,6 +404,6 @@ class ChangelogFinder:
             v1 = NormalizedVersion(old_version)
             v2 = NormalizedVersion(new_version)
             v3 = NormalizedVersion(version)
-            return v1 < v3 and v3 <= v2
+            return bool(v1 < v3 and v3 <= v2)
         except Exception:
             return False

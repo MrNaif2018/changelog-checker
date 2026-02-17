@@ -4,82 +4,80 @@ on:
   push:
     branches:
       - master
-    tags:
-      - "**"
-  pull_request: {}
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
+  lint:
+    name: lint
+    uses: bitcart/bitcart-actions/.github/workflows/lint.yml@master
+    with:
+      install-dependencies: |
+        uv sync --all-extras --frozen --compile-bytecode
+
+  zizmor:
+    name: zizmor
+    uses: bitcart/bitcart-actions/.github/workflows/zizmor-audit.yml@master
+    permissions:
+      contents: read
+      security-events: write
+
   test:
-    name: Test on Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    name: test-${{ matrix.os }}-${{ matrix.python-version }}
+    needs: [lint, zizmor]
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
         os: ["ubuntu-latest", "macos-latest"]
+
     env:
       OS: ${{ matrix.os }}
-      PYTHON: ${{ matrix.python-version }}
-      TEST_ARGS: --cov-report=xml --junitxml=junit.xml -o junit_family=legacy
+      TEST_ARGS: "-o junit_family=legacy --junitxml test-results/junit.xml --cov-report html:coverage"
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v6
         with:
-          enable-cache: true
+          persist-credentials: false
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: bitcart/bitcart-actions/actions/setup-python@master
+        with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: uv sync --all-extras
+      - name: Install library
+        run: |
+          uv sync --all-extras --frozen --compile-bytecode
 
-      - name: Run pre-commit checks
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        run: uv run pre-commit run --all-files
+      - name: Run tests
+        run: |
+          just ci
 
-      - name: Run checks
-        run: uv run task ci
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v5
-        with:
-          env_vars: OS,PYTHON
-          flags: unittests
-          name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
-
-      - name: Upload test results to Codecov
+      - name: Upload coverage to Codecov
+        uses: bitcart/bitcart-actions/actions/codecov@master
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
         with:
-          report_type: test_results
+          token: ${{ secrets.CODECOV_TOKEN }}
+          name: Tests - Python ${{ env.PYTHON }} on ${{ matrix.os }}
+          flags: tests
+          env_vars: PYTHON, OS
+          upload_coverage: ${{ job.status == 'success' }}
 
-  build-and-publish:
-    name: Build and publish to PyPI
-    runs-on: ubuntu-latest
+      - name: Upload test results
+        uses: bitcart/bitcart-actions/actions/upload-test-results@master
+        if: ${{ !cancelled() }}
+        with:
+          suffix: py${{ env.PYTHON }}-${{ matrix.os }}
+
+  combine-coverage:
+    name: combine-coverage
+    uses: bitcart/bitcart-actions/.github/workflows/combine-coverage.yml@master
     needs: test
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    environment:
-      name: pypi
-      url: https://pypi.org/p/changelog-checker
-    permissions:
-      id-token: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          python-version: 3.11
-
-      - name: Install dependencies
-        run: uv sync --all-extras
-
-      - name: Build package
-        run: uv build
-
-      - name: Publish to PyPI
-        run: uv publish --trusted-publishing always
+    if: ${{ !cancelled() }}

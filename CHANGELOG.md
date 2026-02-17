@@ -1,3 +1,7 @@
+# 0.3.1
+
+Improve CI workflows. Upload PEP740 attestations with release
+
 # 0.3.0
 
 Add pip parser (`pip list --outdated`)
