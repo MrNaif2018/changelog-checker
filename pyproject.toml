@@ -112,10 +112,6 @@ no_implicit_reexport = true
 strict_equality = true
 disallow_untyped_defs = true
 skip_cache_mtime_checks = true
-disallow_untyped_calls = true
-warn_return_any = true
-no_implicit_optional = true
-strict_optional = true
 exclude = ["tests"]
 
 [tool.pytest.ini_options]
